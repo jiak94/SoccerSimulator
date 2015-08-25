@@ -29,7 +29,8 @@ public class Barcelona implements Information{
     private static int[] ballInFront = new int[5];
     private static boolean offensive = false;
 
-    @Override
+
+
     public void determineOffensive(int myId, int ball_direction) {
         int i;
         ballInFront[myId] = 0;
@@ -50,6 +51,7 @@ public class Barcelona implements Information{
         }
     }
 
+    @Override
     public int player1(int[] localArea, int ball_direction, int x, int y) {
         int i;
         int myId, partnerId;
