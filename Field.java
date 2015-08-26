@@ -26,8 +26,11 @@ public class Field {
         jframe.setLayout(new BoxLayout(jframe.getContentPane(), BoxLayout.Y_AXIS));
 
         GridLayout infoLayout = new GridLayout(0, 3);
+        GridLayout bgLayout = new GridLayout(23, 80);
+
 
         //bg panel
+
         bg = new JPanel() {
             protected void paintComponent(Graphics g) {
                 Image img = icon.getImage();
@@ -36,6 +39,7 @@ public class Field {
                 jframe.setSize(icon.getIconWidth(), icon.getIconHeight() + 170);
             }
         };
+        bg.setLayout(bgLayout);
 
         bg.setPreferredSize(new Dimension(icon.getIconWidth(), icon.getIconHeight()));
         //end bg Panel
@@ -95,6 +99,21 @@ public class Field {
 
     public static void setWestScore(String score) {
         west_score.setText(score);
+    }
+
+    public static void paintWestPlayer(int x, int y) {
+
+    }
+
+    public static void paintEastPlayer(int x, int y) {
+
+    }
+
+    public static void removeComponent(int x, int y) {
+
+    }
+    public static void paintBall(int x, int y) {
+
     }
 
 }

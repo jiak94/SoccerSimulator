@@ -1,7 +1,7 @@
 /**
  * Created by Jiakuan on 8/24/2015.
  */
-public class RealMadrid implements Information {
+public class RealMadrid extends Team {
     private final int NW = 0;
     private final int N = 1;
     private final int NE = 2;
@@ -9,7 +9,7 @@ public class RealMadrid implements Information {
     private final int PLAYER = 4;
     private final int E = 5;
     private final int SW = 6;
-    private final int S = 9;
+    private final int S = 7;
     private final int SE = 8;
     private int BALL = 2;
     private int GOAL = 1;
