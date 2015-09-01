@@ -11,6 +11,7 @@ public class Barcelona extends Team {
     private final int SW = 6;
     private final int S = 7;
     private final int SE = 8;
+
     private int BALL = 2;
     private int GOAL = 1;
     private int EMPTY = 0;

@@ -4,6 +4,24 @@ import java.util.Random;
  * Created by Jiakuan on 8/24/2015.
  */
 public class SoccerServer {
+    private final double SQR2 = Math.sqrt(2);
+
+    private final int MAX_X = 80;
+    private final int MAX_Y = 23;
+    private final int TIME_LIMIT = 20;
+    private final int TIME_OUT = 3000;
+    private final int KICK_DIST = 10;
+
+    private final double PI = Math.PI;
+
+    private final int EMPTY = 0;
+    private final int GOAL = 1;
+    private final int BALL = 2;
+    private final int BOUNDARY = 3;
+    private final int WEST_PLAYER = 6;
+    private final int EAST_PLAYER = 7;
+    private final int BIGGEST_SIT = 7;
+
     private final int NW = 0;
     private final int N = 1;
     private final int NE = 2;
@@ -13,28 +31,11 @@ public class SoccerServer {
     private final int SW = 6;
     private final int S = 7;
     private final int SE = 8;
-    private int BALL = 2;
-    private int GOAL = 1;
-    private int EMPTY = 0;
-    private int BOUNDARY = 3;
-    private int WEST_PLAYER = 6;
-    private int EAST_PLAYER = 7;
-    private int BIGGEST_SIT = 7;
-
-    private final double SQR2 = Math.sqrt(2);
 
     private final int KICK = 9;
     private final int DO_NOTHING = 10;
     private final int BIGGEST_ACTION = 10;
 
-    public static final int MAX_X = 80;
-    public static final int MAX_Y = 23;
-    public static final int TIME_LIMIT = 20;
-    public static final int TIME_OUT = 3000;
-    public static final int KICK_DIST = 10;
-
-    public String eastTeamName;
-    public String westTeamName;
 
     private int ball_x;
     private int ball_y;
@@ -45,6 +46,9 @@ public class SoccerServer {
 
     private boolean display = true;
     private int points = 7;
+
+    private int opterr;
+    private String optarg;
 
     private Team EAST;
     private Team WEST;
@@ -57,77 +61,31 @@ public class SoccerServer {
         Field.setWestTeam(WEST.teamName());
     }
 
+    private void report_score(int west, int east) {
 
-    private void init() {
-        String c;
-        int i, j, val, r;
-
-        //TODO: clear Screen
-
-        /*
-         * Clear out the field map.
-         */
-        for (i = 0; i < MAX_X; i++) {
-            for (j = 0; j < MAX_Y; j++) {
-                field[i][j] = EMPTY;
-            }
-        }
-
-        /*
-         * location of ball
-         */
-        ball_x = 38;
-        ball_y = 30;
-        replace_ball();
-
-        /*
-         * locations of players
-         */
-        for (i = 0; i <= 6; i += 2) {
-            player_x[i] = 46;
-            player_y[i] = (i / 2 + 1) * 6 - 4;
-            field[player_x[i]][player_y[i]] = EAST_PLAYER;
-
-            //TODO: paint east player
-
-            player_x[i + 1] = 30;
-            player_y[i + 1] = (i / 2 + 1) * 6 - 4;
-            field[player_x[i + 1]][player_y[i + 1]] = WEST_PLAYER;
-            //TODO: paint west player
-        }
-
-        /*
-         * Put boundary around the field.
-         * That will keep the players in bounds all the time
-         */
-        //no need to
-//        for (i = 0; i < MAX_X; i++) {
-//            for (j = 0; j < MAX_Y; j++) {
-//                if ((i == 0) || (i == (MAX_X - 1))) {
-//                    field[i][j] = GOAL;
-//                }
-//            }
-//        }
-
-        //TODO: refresh screen
-    }
-
-    private void report_score (int west, int east) {
+        //west_team.setText(westName);
         Field.setWestScore(Integer.toString(west));
         Field.setEastScore(Integer.toString(east));
+
     }
 
     private void replace_ball() {
         Random rand = new Random();
-        //TODO: erase old ball
+        if (display) {
+            //TODO: erase old ball
+        }
+
         do {
             field[ball_x][ball_y] = EMPTY;
-            ball_y = rand.nextInt() % 20 + 1;
+            ball_y = rand.nextInt(1000) % 20 + 1;
+            //System.out.println(ball_y);
         } while (field[ball_x][ball_y] != EMPTY);
 
         field[ball_x][ball_y] = BALL;
 
-        //TODO: paint the ball
+        if (display) {
+            //TODO: paint the ball
+        }
     }
 
     private void nudge_ball() {
@@ -135,7 +93,9 @@ public class SoccerServer {
         int i = 1;
         int temp;
 
-        //TODO: erase ball
+        if (display) {
+            //TODO: erase ball
+        }
 
         do {
             temp = ball_y + ((rand.nextInt() / 256) % i) - (i / 2);
@@ -149,62 +109,123 @@ public class SoccerServer {
             if (i > 40) {
                 i = 40;
             }
-        } while ((field[ball_x][temp] != EMPTY) &&
-                field[ball_x][temp] != GOAL);
+        } while ((field[ball_x][temp] != EMPTY) && (field[ball_x][temp] != GOAL));
 
         field[ball_x][ball_y] = EMPTY;
         ball_y = temp;
         field[ball_x][ball_y] = BALL;
 
-        //TODO: paint new ball
+        if (display) {
+            //TODO: paint new ball
+        }
     }
 
     private int swap_heading(int heading) {
         switch (heading) {
             case NW:
-                return SE;
+                return (SE);
             case N:
-                return S;
+                return (S);
             case NE:
-                return SW;
+                return (SW);
             case E:
-                return W;
+                return (W);
             case SE:
-                return NW;
+                return (NW);
             case S:
-                return N;
+                return (N);
             case SW:
-                return NE;
+                return (NE);
             case W:
-                return E;
-
+                return (E);
             case KICK:
-                return KICK;
-
+                return (KICK);
             case DO_NOTHING:
-                return DO_NOTHING;
-
+                return (DO_NOTHING);
             default:
-                return DO_NOTHING;
-
+                return (DO_NOTHING);
         }
     }
 
 
+    private void init() {
+        char c;
+        int i, j, val, r;
+
+        if (display) {
+            //TODO: clear Screen
+        }
+
+        /*
+         * Clear out the field map.
+         */
+        for (i = 0; i < MAX_X; i++) {
+            for (j = 0; j < MAX_Y; j++) {
+                field[i][j] = EMPTY;
+            }
+        }
+
+        /*
+         * location of ball
+         */
+        try {
+            ball_x = 38;
+            ball_y = 20;
+            replace_ball();
+        } catch (Exception e) {
+
+        }
+
+        /*
+         * locations of players
+         */
+        for (i = 0; i <= 6; i += 2) {
+            player_x[i] = 46;
+            player_y[i] = (i / 2 + 1) * 6 - 4;
+            field[player_x[i]][player_y[i]] = EAST_PLAYER;
+            //if (display) mvaddch(player_y[i], player_x[i], '<');
+
+            player_x[i + 1] = 30;
+            player_y[i + 1] = (i / 2 + 1) * 6 - 4;
+            field[player_x[i + 1]][player_y[i + 1]] = WEST_PLAYER;
+            //if (display) mvaddch(player_y[i+1], player_x[i+1], '>');
+        }
+
+
+        //TODO: refresh screen
+        for (i = 0; i < MAX_X; i++) {
+            for (j = 0; j < MAX_Y; j++) {
+                if ((i == 0) || (i == (MAX_X - 1))) {
+                    field[i][j] = GOAL;
+                    //if (display) mvaddch(j, i, '|');
+                }
+                if ((j == 0) || (j == (MAX_Y - 1))) {
+                    field[i][j] = BOUNDARY;
+                    //if (display) mvaddch(j, i, '=');
+                }
+            }
+        }
+
+
+    }
+
+
     public void play() {
-        String ch, c;
+        char ch, c;
         int i, j, k, cur_x, cur_y, backwards_cur_x, backwards_cur_y;
         int point_over = 0;
         int game_over = 0;
-        int count = 0;
-        int player_nearby = 0;
+        int count, player_nearby = 0;
         int overall_count = 0;
+
         int[] local_field = new int[9];
         int[] local_backwards_field = new int[9];
         int[] local_ball_field = new int[9];
+
         int ball_direction = N;
         int backwards_ball_direction = N;
         int player_move = N;
+
         int kick_direction = -1;
         int kick_steps = 0;
         double temp_angle = 0;
@@ -214,13 +235,22 @@ public class SoccerServer {
         int west_score = 0;
 
         int slow = 2;
-        int last_ball_x = 0;
-        int last_ball_y = 0;
+        int last_ball_x = 0, last_ball_y = 0;
 
-        while (game_over != -1) {
+
+        opterr = 0;
+
+        EAST.initializeGame();
+        WEST.initializeGame();
+
+
+        while (game_over != 1) {
             init();
 
-            report_score(west_score, east_score);
+            if (display) {
+                report_score(west_score, east_score);
+            }
+
             point_over = 0;
             count = 0;
             overall_count = 0;
@@ -238,76 +268,66 @@ public class SoccerServer {
 
             while (point_over != 1) {
 
-                //Player position
+                /*
+                 * Player's posit
+		         */
                 cur_x = player_x[cur];
                 cur_y = player_y[cur];
 
-                /*
-	 	         * Note the local field around the player
-	 	         */
+		/*
+          * Note the local field around the player
+	   	 */
                 k = 0;
-                for (j = 0; j < 3; j++) {
+                for (j = 0; j < 3; j++)
                     for (i = 0; i < 3; i++) {
-                        local_field[k++] = field[cur_x + i - 1][cur_y + j - 1];
+                        local_field[k++] =
+                                field[cur_x + i - 1][cur_y + j - 1];
                     }
-                }
 
                 /*
                  * Note the local field around the ball
                  */
                 k = 0;
-                for (j = 0; j < 3; j++) {
+                for (j = 0; j < 3; j++)
                     for (i = 0; i < 3; i++) {
-                        local_ball_field[k++] = field[ball_x + i - 1][ball_y + j - 1];
+                        local_ball_field[k++] =
+                                field[ball_x + i - 1][ball_y + j - 1];
                     }
-                }
 
                 /*
                  * Figure out heading to ball
                  */
-                if ((ball_x == cur_x) && (ball_y == cur_y)) {
+                if ((ball_x == cur_x) && (ball_y == cur_y))
                     temp_angle = 0;
-                }
-                else {
+                else
                     temp_angle = Math.atan2((ball_x - cur_x), (ball_y - cur_y));
-                }
 
-                temp_angle += Math.PI;
-
-                temp_angle = 360.0 * temp_angle / (2.0 * Math.PI);
+                temp_angle += PI;
+                temp_angle = 360.0 * temp_angle / (2.0 * PI);
                 ball_direction = N;
-
-                if (temp_angle > 22.5+0*45) {
+                if (temp_angle > 22.5 + 0 * 45)
                     ball_direction = NW;
-                }
-                if (temp_angle > 22.5+1*45) {
+                if (temp_angle > 22.5 + 1 * 45)
                     ball_direction = W;
-                }
-                if (temp_angle > 22.5+2*45) {
+                if (temp_angle > 22.5 + 2 * 45)
                     ball_direction = SW;
-                }
-                if (temp_angle > 22.5+3*45) {
+                if (temp_angle > 22.5 + 3 * 45)
                     ball_direction = S;
-                }
-                if (temp_angle > 22.5+4*45) {
+                if (temp_angle > 22.5 + 4 * 45)
                     ball_direction = SE;
-                }
-                if (temp_angle > 22.5+5*45) {
+                if (temp_angle > 22.5 + 5 * 45)
                     ball_direction = E;
-                }
-                if (temp_angle > 22.5+6*45) {
+                if (temp_angle > 22.5 + 6 * 45)
                     ball_direction = NE;
-                }
-                if (temp_angle > 22.5+7*45) {
+                if (temp_angle > 22.5 + 7 * 45)
                     ball_direction = N;
-                }
 
                 /*
                  * Construct backwards sensing for western players.
                  */
-                for (i = 0; i <= 8; i++) {
+                for (i = 0; i <= 8; i++)
                     local_backwards_field[i] = local_field[8 - i];
-                }
+                backwards_ball_direction = swap_heading(ball_direction);
                 backwards_cur_x = (MAX_X - 1) - cur_x;
                 backwards_cur_y = (MAX_Y - 1) - cur_y;
 
@@ -322,36 +342,52 @@ public class SoccerServer {
                  */
                 switch (cur) {
                     case 0:
-                        player_move = EAST.player1(local_field, ball_direction, cur_x, cur_y);
+                        player_move =
+                                EAST.player1(local_field, ball_direction,
+                                        cur_x, cur_y);
                         break;
                     case 1:
-                        player_move = swap_heading(
-                                WEST.player1(local_backwards_field, backwards_ball_direction,
-                                        backwards_cur_x, backwards_cur_y));
+                        player_move =
+                                swap_heading(
+                                        WEST.player1(local_backwards_field,
+                                                backwards_ball_direction,
+                                                backwards_cur_x, backwards_cur_y));
                         break;
                     case 2:
-                        player_move = EAST.player2(local_field, ball_direction, cur_x, cur_y);
+                        player_move =
+                                EAST.player2(local_field, ball_direction,
+                                        cur_x, cur_y);
                         break;
                     case 3:
-                        player_move = swap_heading(
-                                WEST.player2(local_backwards_field, backwards_ball_direction,
-                                        backwards_cur_x, backwards_cur_y));
+                        player_move =
+                                swap_heading(
+                                        WEST.player2(local_backwards_field,
+                                                backwards_ball_direction,
+                                                backwards_cur_x, backwards_cur_y));
                         break;
                     case 4:
-                        player_move = EAST.player3(local_field, ball_direction, cur_x, cur_y);
+                        player_move =
+                                EAST.player3(local_field, ball_direction,
+                                        cur_x, cur_y);
                         break;
                     case 5:
-                        player_move = swap_heading(
-                                WEST.player3(local_backwards_field, backwards_ball_direction,
-                                        backwards_cur_x, backwards_cur_y));
+                        player_move =
+                                swap_heading(
+                                        WEST.player3(local_backwards_field,
+                                                backwards_ball_direction,
+                                                backwards_cur_x, backwards_cur_y));
                         break;
                     case 6:
-                        player_move = EAST.player4(local_field, ball_direction, cur_x, cur_y);
+                        player_move =
+                                EAST.player4(local_field, ball_direction,
+                                        cur_x, cur_y);
                         break;
                     case 7:
-                        player_move = swap_heading(
-                                WEST.player4(local_backwards_field, backwards_ball_direction,
-                                        backwards_cur_x, backwards_cur_y));
+                        player_move =
+                                swap_heading(
+                                        WEST.player4(local_backwards_field,
+                                                backwards_ball_direction,
+                                                backwards_cur_x, backwards_cur_y));
                         break;
                 }
 
@@ -369,6 +405,7 @@ public class SoccerServer {
                  */
                 if (player_move == KICK) {
                     for (i = 0; i <= 8; i++) {
+                /*--- Where is the ball ?---*/
                         if (local_field[i] == BALL) {
                             kick_direction = i;
                             kick_steps = KICK_DIST;
@@ -377,6 +414,7 @@ public class SoccerServer {
                         }
                     }
                     if (player_move == KICK) {
+                /*--- Ball was NOT nearby ---*/
                         player_move = N;
                     }
                 }
@@ -392,17 +430,17 @@ public class SoccerServer {
                  * Move the player in the world
                  */
                 //TODO: move the player;
+                field[cur_x][cur_y] = EMPTY;
 
                 /*
                  * If the cell we are going to is empty. or
                  * the ball is there and the next cell after that is empty, then...
                  */
                 if ((local_field[player_move] == EMPTY) ||
-                        ((local_field[player_move] == BALL)&&
-                                ((local_ball_field[player_move] == EMPTY)||
+                        ((local_field[player_move] == BALL) &&
+                                ((local_ball_field[player_move] == EMPTY) ||
                                         (local_ball_field[player_move] == GOAL)))) {
-                    switch(player_move)
-                    {
+                    switch (player_move) {
                         case N:
                             player_y[cur]--;
                             path++;
@@ -445,24 +483,19 @@ public class SoccerServer {
                 /*
                  * Mark the field with the player's new position
                  */
-                if ((cur % 2) == 0) {
+                if ((cur % 2) == 0)
                     field[player_x[cur]][player_y[cur]] = EAST_PLAYER;
-                }
-                else {
+                else
                     field[player_x[cur]][player_y[cur]] = WEST_PLAYER;
-                }
 
                 /*
                  * Now move the ball
                  */
-                if ((local_field[player_move] == BALL)&&
-                        ((local_ball_field[player_move] == EMPTY)||
+                if ((local_field[player_move] == BALL) &&
+                        ((local_ball_field[player_move] == EMPTY) ||
                                 (local_ball_field[player_move] == GOAL))) {
-
                     field[ball_x][ball_y] = EMPTY;
-
-                    //TODO: MOVE the ball (NEW POSITION)
-
+                    //TODO: if (display) mvaddch(ball_y, ball_x, ' '); /* new position */
                     switch (player_move) {
                         case N:
                             ball_y--;
@@ -504,20 +537,26 @@ public class SoccerServer {
                  * Now handle the case of KICK
                  */
                 if (kick_steps > 0) {
+            /*--- Revise the local ball field ---*/
                     k = 0;
-                    for (j = 0; j < 3; j++) {
+                    for (j = 0; j < 3; j++)
                         for (i = 0; i < 3; i++) {
-                            local_ball_field[k++] = field[ball_x + i - 1][ball_y + j - 1];
+                            if (ball_x + i - 1 < 0) {
+                                local_ball_field[k++] = field[0][ball_y + j - 1];
+                            } else if (ball_x + i - 1 > 79) {
+                                local_ball_field[k++] = field[79][ball_y + j - 1];
+                            } else {
+                                local_ball_field[k++] = field[ball_x + i - 1][ball_y + j - 1];
+                            }
                         }
-                    }
 
-                    /*-- Erase old position --*/
+			/*--- Erase old position ---*/
                     field[ball_x][ball_y] = EMPTY;
-                    //TODO: erase ball
+                    //TODO: if (display) mvaddch(ball_y, ball_x, ' ');
 
-                    /*--- Propel the ball if the space is empty ---*/
+			/*--- Propel the ball if the space is empty ---*/
                     if ((local_ball_field[kick_direction] == EMPTY) ||
-                            (local_ball_field[kick_direction] == GOAL)) {
+                            (local_ball_field[kick_direction] == GOAL))
                         switch (kick_direction) {
                             case N:
                                 ball_y--;
@@ -550,30 +589,31 @@ public class SoccerServer {
                             default:
                                 break;
                         }
-                    }
                     else {
                         kick_direction = -1;
                         kick_steps = 0;
                     }
-
                     kick_steps--;
-                    field[ball_x][ball_y] = BALL;
+                    if (ball_x < 0) {
+                        field[0][ball_y] = BALL;
+                    } else if (ball_x > 79) {
+                        field[79][ball_y] = BALL;
+                    } else {
+                        field[ball_x][ball_y] = BALL;
+                    }
                 }
 
                 /*
                  * Mark the new locations of the ball and
                  * the player on the field.
                  */
-                //TODO: paint new ball
-
+                //TODO: if (display) mvaddch(ball_y, ball_x, 'O');
                 if ((cur % 2) == 0) {
-                    //TODO: paint east player
+                    //TODO: if (display) mvaddch(player_y[cur], player_x[cur], '<');
+                } else {
+                    //TODO: if (display) mvaddch(player_y[cur], player_x[cur], '>');
                 }
-                else {
-                    //TODO: paint west player
-                }
-
-                //TODO: wresh(game_win);
+                //TODO: if (display) wrefresh(game_win);
 
 
                 /*
@@ -582,76 +622,78 @@ public class SoccerServer {
                 if (ball_x <= 0) {
                     east_score++;
                     point_over = 1;
-
-
-                    EAST.wonPoint();
+//                    if (!display) {
+//                        printf("%s vs %s: %d to %d \n", WESTteam_name(), EASTteam_name(),
+//                                west_score, east_score);
+//                        fflush(stdout);
+//                    }
+                    EAST.wonPoint(); /* Advise the teams of the point */
                     WEST.lostPoint();
                 }
+
 
                 if (ball_x >= (MAX_X - 1)) {
                     west_score++;
                     point_over = 1;
-
-                    WEST.wonPoint();
+//                    if (!display)
+//                    {
+//                        printf("%s vs %s: %d to %d \n",WESTteam_name(),EASTteam_name(),
+//                                west_score,east_score);
+//                        fflush(stdout);
+//                    }
+                    WEST.wonPoint(); /* Advise the teams of the point */
                     EAST.lostPoint();
+                    report_score(west_score, east_score);
                 }
 
                 player_nearby = 0;
-                for (i = 0; i <= 0; i++) {
+                for (i = 0; i <= 8; i++) {
                     if ((local_ball_field[i] == WEST_PLAYER) ||
-                            (local_ball_field[i] == EAST_PLAYER)) {
+                            (local_ball_field[i] == EAST_PLAYER))
                         player_nearby = 1;
-                    }
                 }
-
                 if (player_nearby == 1 &&
-                        ((last_ball_x == ball_x)&&(last_ball_y == ball_y))) {
+                        ((last_ball_x == ball_x) && (last_ball_y == ball_y)))
                     count++;
-                }
-
                 if (count > TIME_LIMIT) {
                     nudge_ball();
                     count = 0;
                 }
-
-                if ((last_ball_x != ball_x)||(last_ball_y != ball_y)) {
+                if ((last_ball_x != ball_x) || (last_ball_y != ball_y))
                     count = 0;
-                }
-
                 last_ball_x = ball_x;
                 last_ball_y = ball_y;
 
-                /*
-                 * Check for user input.
-                 */
-                //TODO: CHECK Input
 
                 /*
                  * go on to the next player
                  */
                 cur++;
-                if (cur == 8) {
+                if (cur == 8)
                     cur = 0;
-                }
 
                 /*
                  * check for big timeout.
                  */
                 overall_count++;
+                overall_count++;
                 if (overall_count >= TIME_OUT) {
-                    //print time out
-                    //TODO: erase old ball spot
+                    //printf("TIME_OUT\n");
+            /* erase old spot */
+                    //if (display) mvaddch(ball_x, ball_y, ' ');
                     field[ball_x][ball_y] = EMPTY;
                     ball_x = 38;
-                    ball_y = 30;
-
+                    ball_y = 20;
                     replace_ball();
                     overall_count = 0;
-                    EAST.lostPoint();
+                    EAST.lostPoint(); /* punish teams */
                     WEST.lostPoint();
                 }
-
             }
+            //Field.timer.stop();
+            report_score(west_score, east_score);
+
+            System.out.println("west: " + west_score + " east: " + east_score);
 
             /*
              * Check for first to 7 wins.
@@ -660,9 +702,11 @@ public class SoccerServer {
                 game_over = 1;
             }
         }
+        //Field.timer.stop();
         EAST.gameOver();
         WEST.gameOver();
-
+        //Field.timer.stop();
         report_score(west_score, east_score);
+        //System.exit(0);
     }
 }

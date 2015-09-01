@@ -33,140 +33,10 @@ public class RealMadrid extends Team {
 
     @Override
     public int player1(int[] local_area, int ball_direction, int x, int y) {
-        int i;
-        int myId, partnerId;
-        myId = 1;
-        partnerId = 2;
-
-        player_x[myId] = x;
-        player_y[myId] = y;
-
-        if (firstTime) {
-            firstTime = false;
-            for (i = 0; i <=4; i++) {
-                player_x[i] = 0;
-                player_y[i] = 0;
-
-                haveBall[i] = 0;
-            }
-        }
-
-        for (i = 1; i <= 4; i++) {
-            if (haveBall[i] == 1) {
-                offensive = true;
-            }
-        }
-
-        haveBall[myId] = 0;
-
-        if (local_area[N] == BALL) {
-            return(NE);
-        }
-        if (local_area[NE] == BALL) {
-            return(E);
-        }
-        if (local_area[E] == BALL) {
-            return(SE);
-        }
-        if (local_area[SE] == BALL) {
-            return(E);
-        }
-        if (local_area[S] == BALL) {
-            return(SE);
-        }
-        if (local_area[SW] == BALL) {
-            haveBall[myId] = 1;
-            return KICK;
-        }
-        if (local_area[W] == BALL) {
-            haveBall[myId] = 1;
-            return KICK;
-        }
-        if (local_area[NW] == BALL) {
-            haveBall[myId] = 1;
-            return KICK;
-        }
-
-        if (local_area[N] == BOUNDARY) {
-            return ball_direction;
-        }
-
-        if ((y >= (player_y[partnerId]-5))&&(ball_direction == N)) {
-            return(N);
-        }
-        if ((y >= (player_y[partnerId]-5))&&(ball_direction == NE)) {
-            return(NE);
-        }
-        if ((y >= (player_y[partnerId]-5))&&(ball_direction == E)) {
-            return(E);
-        }
-        if ((y >= (player_y[partnerId]-5))&&(ball_direction == SE)) {
-            return(E);
-        }
-        if ((y >= (player_y[partnerId]-5))&&(ball_direction == S)) {
-            return(DO_NOTHING);
-        }
-        if ((y >= (player_y[partnerId]-5))&&(ball_direction == SW)) {
-            return(SW);
-        }
-        if ((y >= (player_y[partnerId]-5))&&(ball_direction == W)) {
-            return(W);
-        }
-        if ((y >= (player_y[partnerId]-5))&&(ball_direction == NW)) {
-            return(NW);
-        }
-
-        return ball_direction;
-    }
-
-    @Override
-    public int player2(int[] local_area, int ball_direction, int x, int y) {
-        int i;
-        int myId, partnerId;
-        myId = 2;
-        partnerId = 3;
-
-        player_x[myId] = x;
-        player_y[myId] = y;
-
-        haveBall[myId] = 0;
-
         if (local_area[N] == BALL) {
             return NE;
         }
         if (local_area[NE] == BALL) {
-            return E;
-        }
-        if (local_area[E] == BALL) {
-            return SE;
-        }
-        if (local_area[SE] == BALL) {
-            return E;
-        }
-        if (local_area[S] == BALL) {
-            return SE;
-        }
-        if (local_area[SW] == BALL) {
-            haveBall[myId] = 1;
-            return KICK;
-        }
-        if (local_area[W] == BALL) {
-            haveBall[myId] = 1;
-            return KICK;
-        }
-        if (local_area[NW] == BALL) {
-            haveBall[myId] = 1;
-            return KICK;
-        }
-
-        if (local_area[N] == BOUNDARY) {
-            return(ball_direction);
-        }
-
-        if (local_area[N] == BALL) {
-            return(NE);
-        }
-        if (local_area[NE] == BALL) {
             return(E);
         }
         if (local_area[E] == BALL) {
@@ -178,6 +48,7 @@ public class RealMadrid extends Team {
         if (local_area[S] == BALL) {
             return(SE);
         }
+
         if (local_area[SW] == BALL) {
             return(KICK);
         }
@@ -189,183 +60,22 @@ public class RealMadrid extends Team {
         }
 
         return ball_direction;
+
+    }
+
+    @Override
+    public int player2(int[] local_area, int ball_direction, int x, int y) {
+        return player1(local_area, ball_direction, x, y);
     }
 
     @Override
     public int player3(int[] local_area, int ball_direction, int x, int y) {
-        int i;
-        int myId, partnerId;
-
-        myId = 3;
-        partnerId= 3;
-
-        player_x[myId] = x;
-        player_y[myId] = y;
-
-        haveBall[myId] =  0;
-
-        if (local_area[N] == BALL) {
-            return(NE);
-        }
-        if (local_area[NE] == BALL) {
-            return(E);
-        }
-        if (local_area[E] == BALL) {
-            return(SE);
-        }
-        if (local_area[SE] == BALL) {
-            return(E);
-        }
-        if (local_area[S] == BALL) {
-            return(SE);
-        }
-        if (local_area[SW] == BALL)
-        {
-            haveBall[myId] = 1;
-            return(KICK);
-        }
-        if (local_area[W] == BALL)
-        {
-            haveBall[myId] = 1;
-            return(KICK);
-        }
-        if (local_area[NW] == BALL)
-        {
-            haveBall[myId] = 1;
-            return(KICK);
-        }
-
-        if (local_area[N] == BOUNDARY) return(ball_direction);
-
-        if (local_area[N] == BALL) {
-            return(NE);
-        }
-        if (local_area[NE] == BALL) {
-            return(E);
-        }
-        if (local_area[E] == BALL) {
-            return(SE);
-        }
-        if (local_area[SE] == BALL) {
-            return(E);
-        }
-        if (local_area[S] == BALL) {
-            return(SE);
-        }
-        if (local_area[SW] == BALL) {
-            return(KICK);
-        }
-        if (local_area[W] == BALL) {
-            return(KICK);
-        }
-        if (local_area[NW] == BALL) {
-            return(KICK);
-        }
-
-        return ball_direction;
+        return player1(local_area, ball_direction, x, y);
     }
 
     @Override
     public int player4(int[] local_area, int ball_direction, int x, int y) {
-        int i;
-        int myId, partnerId;
-        myId = 4;
-        partnerId = 3;
-        player_x[myId] = x;
-        player_y[myId] = y;
-
-        haveBall[myId] = 0;
-
-        if (local_area[N] == BALL) {
-            return(NE);
-        }
-        if (local_area[NE] == BALL) {
-            return(E);
-        }
-        if (local_area[E] == BALL) {
-            return(SE);
-        }
-        if (local_area[SE] == BALL) {
-            return(E);
-        }
-        if (local_area[S] == BALL) {
-            return(SE);
-        }
-        if (local_area[SW] == BALL)
-        {
-            haveBall[myId] = 1;
-            return(KICK);
-        }
-        if (local_area[W] == BALL)
-        {
-            haveBall[myId] = 1;
-            return(KICK);
-        }
-        if (local_area[NW] == BALL)
-        {
-            haveBall[myId] = 1;
-            return(KICK);
-        }
-
-        if (local_area[N] == BOUNDARY) {
-            return(ball_direction);
-        }
-
-        if (local_area[N] == BALL) {
-            return(NE);
-        }
-        if (local_area[NE] == BALL) {
-            return(E);
-        }
-        if (local_area[E] == BALL) {
-            return(SE);
-        }
-        if (local_area[SE] == BALL) {
-            return(E);
-        }
-        if (local_area[S] == BALL) {
-            return(SE);
-        }
-        if (local_area[SW] == BALL) {
-            return(KICK);
-        }
-        if (local_area[W] == BALL) {
-            return(KICK);
-        }
-        if (local_area[NW] == BALL) {
-            return(KICK);
-        }
-
-        if (local_area[S] == BOUNDARY) {
-            return(ball_direction);
-        }
-
-        if ((y <= player_y[3]+5)&&(ball_direction == N)) {
-            return(DO_NOTHING);
-        }
-        if ((y <= player_y[3]+5)&&(ball_direction == NE)) {
-            return(E);
-        }
-        if ((y <= player_y[3]+5)&&(ball_direction == E)) {
-            return(E);
-        }
-        if ((y <= player_y[3]+5)&&(ball_direction == SE)) {
-            return(SE);
-        }
-        if ((y <= player_y[3]+5)&&(ball_direction == S)) {
-            return(S);
-        }
-        if ((y <= player_y[3]+5)&&(ball_direction == SW)) {
-            return(SW);
-        }
-        if ((y <= player_y[3]+5)&&(ball_direction == W)) {
-            return(W);
-        }
-        if ((y <= player_y[3]+5)&&(ball_direction == NW)) {
-            return(NW);
-        }
-
-        return ball_direction;
+        return player1(local_area, ball_direction, x, y);
     }
 
     @Override
