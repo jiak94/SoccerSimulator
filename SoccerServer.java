@@ -72,7 +72,7 @@ public class SoccerServer {
     private void replace_ball() {
         Random rand = new Random();
         if (display) {
-            //TODO: erase old ball
+            Field.removeComponent(ball_y, ball_x);
         }
 
         do {
@@ -84,7 +84,7 @@ public class SoccerServer {
         field[ball_x][ball_y] = BALL;
 
         if (display) {
-            //TODO: paint the ball
+            Field.paintBall(ball_y, ball_x);
         }
     }
 
@@ -94,7 +94,7 @@ public class SoccerServer {
         int temp;
 
         if (display) {
-            //TODO: erase ball
+            Field.removeComponent(ball_y, ball_x);
         }
 
         do {
@@ -116,7 +116,7 @@ public class SoccerServer {
         field[ball_x][ball_y] = BALL;
 
         if (display) {
-            //TODO: paint new ball
+            Field.paintBall(ball_y, ball_x);
         }
     }
 
@@ -153,7 +153,7 @@ public class SoccerServer {
         int i, j, val, r;
 
         if (display) {
-            //TODO: clear Screen
+            Field.cleanScreen();
         }
 
         /*
@@ -184,15 +184,17 @@ public class SoccerServer {
             player_y[i] = (i / 2 + 1) * 6 - 4;
             field[player_x[i]][player_y[i]] = EAST_PLAYER;
             //if (display) mvaddch(player_y[i], player_x[i], '<');
+            Field.paintEastPlayer(player_y[i], player_x[i]);
 
             player_x[i + 1] = 30;
             player_y[i + 1] = (i / 2 + 1) * 6 - 4;
             field[player_x[i + 1]][player_y[i + 1]] = WEST_PLAYER;
             //if (display) mvaddch(player_y[i+1], player_x[i+1], '>');
+            Field.paintWestPlayer(player_y[i+1], player_x[i+1]);
         }
 
 
-        //TODO: refresh screen
+
         for (i = 0; i < MAX_X; i++) {
             for (j = 0; j < MAX_Y; j++) {
                 if ((i == 0) || (i == (MAX_X - 1))) {
@@ -211,6 +213,7 @@ public class SoccerServer {
 
 
     public void play() {
+        //Field.play.disable();
         char ch, c;
         int i, j, k, cur_x, cur_y, backwards_cur_x, backwards_cur_y;
         int point_over = 0;
@@ -429,7 +432,7 @@ public class SoccerServer {
                 /*
                  * Move the player in the world
                  */
-                //TODO: move the player;
+                Field.removeComponent(cur_y, cur_x);
                 field[cur_x][cur_y] = EMPTY;
 
                 /*
@@ -495,7 +498,9 @@ public class SoccerServer {
                         ((local_ball_field[player_move] == EMPTY) ||
                                 (local_ball_field[player_move] == GOAL))) {
                     field[ball_x][ball_y] = EMPTY;
-                    //TODO: if (display) mvaddch(ball_y, ball_x, ' '); /* new position */
+
+                    Field.removeComponent(ball_y, ball_x);
+
                     switch (player_move) {
                         case N:
                             ball_y--;
@@ -552,7 +557,8 @@ public class SoccerServer {
 
 			/*--- Erase old position ---*/
                     field[ball_x][ball_y] = EMPTY;
-                    //TODO: if (display) mvaddch(ball_y, ball_x, ' ');
+
+                    Field.removeComponent(ball_y, ball_x);
 
 			/*--- Propel the ball if the space is empty ---*/
                     if ((local_ball_field[kick_direction] == EMPTY) ||
@@ -607,13 +613,17 @@ public class SoccerServer {
                  * Mark the new locations of the ball and
                  * the player on the field.
                  */
-                //TODO: if (display) mvaddch(ball_y, ball_x, 'O');
+
+                Field.paintBall(ball_y, ball_x);
+
                 if ((cur % 2) == 0) {
-                    //TODO: if (display) mvaddch(player_y[cur], player_x[cur], '<');
+
+                    Field.paintEastPlayer(player_y[cur], player_x[cur]);
                 } else {
-                    //TODO: if (display) mvaddch(player_y[cur], player_x[cur], '>');
+
+                    Field.paintWestPlayer(player_y[cur], player_x[cur]);
                 }
-                //TODO: if (display) wrefresh(game_win);
+
 
 
                 /*
@@ -676,11 +686,11 @@ public class SoccerServer {
                  * check for big timeout.
                  */
                 overall_count++;
-                overall_count++;
                 if (overall_count >= TIME_OUT) {
                     //printf("TIME_OUT\n");
             /* erase old spot */
                     //if (display) mvaddch(ball_x, ball_y, ' ');
+                    Field.removeComponent(ball_y, ball_x);
                     field[ball_x][ball_y] = EMPTY;
                     ball_x = 38;
                     ball_y = 20;
@@ -694,6 +704,8 @@ public class SoccerServer {
             report_score(west_score, east_score);
 
             System.out.println("west: " + west_score + " east: " + east_score);
+
+            Field.cleanScreen();
 
             /*
              * Check for first to 7 wins.
